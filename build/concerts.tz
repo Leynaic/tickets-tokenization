@@ -1,4 +1,18 @@
-{ parameter unit ;
+{ parameter
+    (or (pair %main
+           (pair (string %name) (set %tokenIds nat))
+           (big_map %tokenMetas nat (pair (nat %token_id) (map %token_info string bytes))))
+        (unit %nothing)) ;
   storage (big_map string string) ;
-  code { CDR ; NIL operation ; PAIR } }
+  code { UNPAIR ;
+         IF_LEFT
+           { EMPTY_BIG_MAP nat address ;
+             SWAP ;
+             CAR ;
+             CDR ;
+             ITER { SWAP ; SENDER ; DIG 2 ; SWAP ; SOME ; SWAP ; UPDATE } ;
+             DROP }
+           { DROP } ;
+         NIL operation ;
+         PAIR } }
 

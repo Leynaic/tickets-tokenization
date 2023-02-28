@@ -1,15 +1,44 @@
-type storage = big_map<string, string>;
-type parameter =
-| ["Main"];
+#import "@ligo/fa/lib/fa2/nft/NFT.mligo" "NFT"
 
+type storage = big_map<string, string>;
+type concertParams = {
+  name : string,
+  tokenIds : set<nat>,
+  tokenMetas : NFT.TokenMetadata.t
+};
+
+type parameter =
+  | ["Main", concertParams]
+  | ["Nothing"]
+;
 
 type return_ = [list <operation>, storage];
 
-const main = ([action, store] : [parameter, storage]) : return_ => {
- return [
-   (list([]) as list <operation>),    // No operations
-   (match (action, {
-        Main: () => store,
-    }))
-  ]
+const initLedger = (acc: NFT.Ledger.t, elt: nat) : NFT.Ledger.t => Big_map.add(elt, Tezos.get_sender(), acc);
+
+
+const createConcert = (params: concertParams, store: storage) : return_ => {
+  const tokenIds: set<nat> = params.tokenIds;
+  const legder: NFT.Ledger.t = Big_map.empty;
+  const foldedLedger: NFT.Ledger.t = Set.fold(initLedger, tokenIds, legder);
+  const tokenMetadata: NFT.TokenMetadata.t = params.tokenMetas;
+  const operators: NFT.Operators.t = Big_map.empty;
+  const metadata: NFT.Metadata.t = Big_map.empty;
+
+  const _concertStorage: NFT.Storage.t = {
+        ledger: foldedLedger,
+        operators: operators,
+        token_ids: tokenIds,
+        token_metadata: tokenMetadata,
+        metadata: metadata
+    };
+
+  return [list([]), store];
+};
+
+const main = (action: parameter, store: storage): return_ => {
+ return match(action, {
+      Main: (params: concertParams) => createConcert(params, store),
+      Nothing: () => [list([]), store]
+ });
 };

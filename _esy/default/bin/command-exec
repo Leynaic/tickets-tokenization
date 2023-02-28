@@ -1,0 +1,81 @@
+#!/bin/bash
+# Command environment
+
+#
+# Built-in
+#
+export ESY__ROOT_PACKAGE_CONFIG_PATH="/Users/leynaic/Development/QSI/tickets-tokenization/esy.json"
+export USER='leynaic'
+export GIT_ASKPASS='/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh'
+export PATH='/opt/homebrew/lib/node_modules/esy/3/i/esy-7d7e29d3/bin:/opt/homebrew/opt/postgresql@15/bin:/Users/leynaic/.opam/default/bin:/Users/leynaic/.jenv/shims:/Users/leynaic/.jenv/bin:/opt/homebrew/opt/libpq/bin:/Users/leynaic/.meteor:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin:/opt/homebrew/opt/postgresql@15/bin:/Users/leynaic/.opam/default/bin:/Users/leynaic/.jenv/shims:/Users/leynaic/.jenv/bin:/opt/homebrew/opt/libpq/bin:/Users/leynaic/.meteor:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/leynaic/.cargo/bin:/Users/leynaic/Library/Application Support/JetBrains/Toolbox/scripts:/Users/leynaic/.deno/bin:/Users/leynaic/flutter/bin:/Users/leynaic/Library/Python/3.9/bin:/Users/leynaic/.pub-cache/bin:/Users/leynaic/Library/Application Support/JetBrains/Toolbox/scripts:/Users/leynaic/.deno/bin:/Users/leynaic/flutter/bin:/Users/leynaic/Library/Python/3.9/bin:/Users/leynaic/.pub-cache/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+export HOMEBREW_CELLAR='/opt/homebrew/Cellar'
+export LESS='-R'
+export OCAMLPATH='/opt/homebrew/lib/node_modules/esy/3/i/esy-7d7e29d3/lib:'
+export XPC_FLAGS='0x0'
+export MallocNanoZone='0'
+export CAML_LD_LIBRARY_PATH='/opt/homebrew/lib/node_modules/esy/3/i/esy-7d7e29d3/stublibs:/opt/homebrew/lib/node_modules/esy/3/i/esy-7d7e29d3/lib/stublibs:/Users/leynaic/.opam/default/lib/stublibs:/Users/leynaic/.opam/default/lib/ocaml/stublibs:/Users/leynaic/.opam/default/lib/ocaml'
+export LOGNAME='leynaic'
+export SHLVL='1'
+export MAN_PATH='/opt/homebrew/lib/node_modules/esy/3/i/esy-7d7e29d3/man:'
+export PAGER='less'
+export VSCODE_GIT_ASKPASS_MAIN='/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass-main.js'
+export OLDPWD='/Users/leynaic/Development/QSI/tickets-tokenization'
+export _='/opt/homebrew/lib/node_modules/esy/3/i/esy-7d7e29d3/bin/esy'
+export __CFBundleIdentifier='com.microsoft.VSCode'
+export INFOPATH='/opt/homebrew/share/info:/opt/homebrew/share/info:'
+export OPAM_SWITCH_PREFIX='/Users/leynaic/.opam/default'
+export LANG='fr_FR.UTF-8'
+export HOMEBREW_PREFIX='/opt/homebrew'
+export HOME='/Users/leynaic'
+export OCAML_TOPLEVEL_PATH='/Users/leynaic/.opam/default/lib/toplevel'
+export COMMAND_MODE='unix2003'
+export JENV_SHELL='zsh'
+export COLORTERM='truecolor'
+export VSCODE_GIT_ASKPASS_NODE='/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin)'
+export ORIGINAL_XDG_CURRENT_DESKTOP='undefined'
+export __CF_USER_TEXT_ENCODING='0x1F5:0x0:0x1'
+export ZSH='/Users/leynaic/.oh-my-zsh'
+export TERM_PROGRAM_VERSION='1.75.1'
+export VSCODE_INJECTION='1'
+export SHELL='/bin/zsh'
+export MANPATH='/opt/homebrew/share/man:/usr/share/man:/usr/local/share/man:/opt/homebrew/share/man::'
+export LSCOLORS='Gxfxcxdxbxegedabagacad'
+export PWD='/Users/leynaic/Development/QSI/tickets-tokenization'
+export ZDOTDIR='/Users/leynaic'
+export SSH_AUTH_SOCK='/private/tmp/com.apple.launchd.FQhIiUpEot/Listeners'
+export USER_ZDOTDIR='/Users/leynaic'
+export DENO_INSTALL='/Users/leynaic/.deno'
+export TERM_PROGRAM='vscode'
+export VSCODE_GIT_IPC_HANDLE='/var/folders/c1/tnjz47js26v5kn_kvgq2yp5w0000gn/T/vscode-git-fa2ea37bb2.sock'
+export TERM='xterm-256color'
+export TMPDIR='/var/folders/c1/tnjz47js26v5kn_kvgq2yp5w0000gn/T/'
+export XPC_SERVICE_NAME='0'
+export HOMEBREW_REPOSITORY='/opt/homebrew'
+export JENV_LOADED='1'
+export VSCODE_GIT_ASKPASS_EXTRA_ARGS='--ms-enable-electron-run-as-node'
+export SHELL='/bin/zsh'
+export PATH="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/bin:$PATH"
+export cur__etc="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/etc"
+export cur__share="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/share"
+export cur__toplevel="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/toplevel"
+export cur__stublibs="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/stublibs"
+export cur__doc="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/doc"
+export cur__man="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/man"
+export cur__lib="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/lib"
+export cur__sbin="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/sbin"
+export cur__bin="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/bin"
+export cur__install="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c"
+export cur__target_dir="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/b/tickets_tokenization-01b2f29c"
+export cur__original_root="/Users/leynaic/Development/QSI/tickets-tokenization"
+export cur__root="/Users/leynaic/Development/QSI/tickets-tokenization"
+export cur__dev="true"
+export cur__version="link-dev:./esy.json"
+export cur__name="tickets-tokenization"
+export OCAMLFIND_LDCONF="ignore"
+export OCAMLFIND_DESTDIR="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/i/tickets_tokenization-01b2f29c/lib"
+export DUNE_BUILD_DIR="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/store/b/tickets_tokenization-01b2f29c"
+export DUNE_STORE_ORIG_SOURCE_DIR="true"
+export SHELL="env -i /bin/bash --norc --noprofile"
+export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export SHELL="/bin/zsh"
+exec "$@"

@@ -1,11 +1,47 @@
-[ { "prim": "parameter", "args": [ { "prim": "unit" } ] },
+[ { "prim": "parameter",
+    "args":
+      [ { "prim": "or",
+          "args":
+            [ { "prim": "pair",
+                "args":
+                  [ { "prim": "pair",
+                      "args":
+                        [ { "prim": "string", "annots": [ "%name" ] },
+                          { "prim": "set", "args": [ { "prim": "nat" } ],
+                            "annots": [ "%tokenIds" ] } ] },
+                    { "prim": "big_map",
+                      "args":
+                        [ { "prim": "nat" },
+                          { "prim": "pair",
+                            "args":
+                              [ { "prim": "nat", "annots": [ "%token_id" ] },
+                                { "prim": "map",
+                                  "args":
+                                    [ { "prim": "string" },
+                                      { "prim": "bytes" } ],
+                                  "annots": [ "%token_info" ] } ] } ],
+                      "annots": [ "%tokenMetas" ] } ],
+                "annots": [ "%main" ] },
+              { "prim": "unit", "annots": [ "%nothing" ] } ] } ] },
   { "prim": "storage",
     "args":
       [ { "prim": "big_map",
           "args": [ { "prim": "string" }, { "prim": "string" } ] } ] },
   { "prim": "code",
     "args":
-      [ [ { "prim": "CDR" },
+      [ [ { "prim": "UNPAIR" },
+          { "prim": "IF_LEFT",
+            "args":
+              [ [ { "prim": "EMPTY_BIG_MAP",
+                    "args": [ { "prim": "nat" }, { "prim": "address" } ] },
+                  { "prim": "SWAP" }, { "prim": "CAR" }, { "prim": "CDR" },
+                  { "prim": "ITER",
+                    "args":
+                      [ [ { "prim": "SWAP" }, { "prim": "SENDER" },
+                          { "prim": "DIG", "args": [ { "int": "2" } ] },
+                          { "prim": "SWAP" }, { "prim": "SOME" },
+                          { "prim": "SWAP" }, { "prim": "UPDATE" } ] ] },
+                  { "prim": "DROP" } ], [ { "prim": "DROP" } ] ] },
           { "prim": "NIL", "args": [ { "prim": "operation" } ] },
           { "prim": "PAIR" } ] ] } ]
 

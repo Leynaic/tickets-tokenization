@@ -1,0 +1,4 @@
+#!/bin/sh
+export ESY__NODE_BIN_PATH="/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/bin"
+exec "/opt/homebrew/Cellar/node/19.6.0/bin/node" -r "/Users/leynaic/Development/QSI/tickets-tokenization/_esy/default/pnp.js" "$@"
+              
