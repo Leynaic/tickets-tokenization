@@ -93,7 +93,7 @@ let packageInformationStores = new Map([
 ["@ligo/fa",
 new Map([["1.0.0",
          {
-           packageLocation: "./.ligo/source/i/ligo__s__fa__1.0.0__cd3e92cb/",
+           packageLocation: "/Users/leynaic/.esy/source/i/ligo__s__fa__1.0.0__cd3e92cb/",
            packageDependencies: new Map([["@ligo/fa", "1.0.0"]])}]])],
   [null,
   new Map([[null,
@@ -104,7 +104,7 @@ new Map([["1.0.0",
 let topLevelLocatorPath = "../../";
 let locatorsByLocations = new Map([
 ["../../", topLevelLocator],
-  ["./.ligo/source/i/ligo__s__fa__1.0.0__cd3e92cb/",
+  ["../../../../../.esy/source/i/ligo__s__fa__1.0.0__cd3e92cb/",
   {
     name: "@ligo/fa",
     reference: "1.0.0"}]]);
@@ -122,8 +122,8 @@ let locatorsByLocations = new Map([
     let match;
 
   
-      if (relativeLocation.length >= 46 && relativeLocation[45] === '/')
-        if (match = locatorsByLocations.get(relativeLocation.substr(0, 46)))
+      if (relativeLocation.length >= 58 && relativeLocation[57] === '/')
+        if (match = locatorsByLocations.get(relativeLocation.substr(0, 58)))
           return blacklistCheck(match);
       
 

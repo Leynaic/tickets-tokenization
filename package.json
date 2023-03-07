@@ -1,24 +1,16 @@
 {
-  "name": "concerts",
-  "version": "1.0.0",
+  "name": "nft_concerts",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "ligo compile contract contracts/concerts.jsligo --output-file build/concerts.tz && ligo compile contract contracts/concerts.jsligo --output-file build/concerts.json --michelson-format json",
-    "deploy": "ts-node deploy/deploy.ts ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MPL-2.0",
+  "keywords": ["tezos", "nft", "concerts"],
+  "author": "Leynaïc Brisse",
+  "license": "ISC",
   "devDependencies": {
-    "@taquito/signer": "*",
-    "@taquito/taquito": "*",
-    "@taquito/utils": "*",
-    "cli-spinner": "*",
-    "dotenv": "*",
-    "ts-node": "*",
-    "typescript": "*",
-    "ansi-colors": "^4.1.3"
+    "@taqueria/plugin-ligo": "^0.28.3",
+    "@taqueria/plugin-taquito": "^0.28.3"
   }
 }

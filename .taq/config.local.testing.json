@@ -1,0 +1,16 @@
+{
+    "contracts": {
+        "nft": {
+            "address": "KT1BmHWxw3tyJ3XTRRhGNByR3pbC5FDpz4mB"
+        }
+    },
+    "networkName": "ghostnet",
+    "accounts": {
+        "taqOperatorAccount": {
+            "publicKey": "edpku6D9Ex3EE5kFqkVEQvAcGykc1byCwST7VAadH1sDyxF4AMBY46",
+            "publicKeyHash": "tz1LdcsLUAV9sq9ajj76evZPy7HSTCcA9rau",
+            "privateKey": "edskRgXVXuqH5CJ6jqr7Z31eJXidhPGRhpQNgkNnTEwuYVh9kVvww6twy6iU7pJbj6eSvhCpQ3DpFe3qrw2ryLHczKYEAPHT82",
+            "mnemonic": "sponsor gate turn sketch beauty also job caution cat session ostrich hawk"
+        }
+    }
+}
