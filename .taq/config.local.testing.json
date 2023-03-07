@@ -2,6 +2,12 @@
     "contracts": {
         "nft": {
             "address": "KT1BmHWxw3tyJ3XTRRhGNByR3pbC5FDpz4mB"
+        },
+        "concert": {
+            "address": "KT194qNtjCFiQKsow6eaXrLSe7hQ48apSR2B"
+        },
+        "ticket_nft": {
+            "address": "KT1CQZwZVLcWu7kUJpBWXYDcCEXAd7PrUXjF"
         }
     },
     "networkName": "ghostnet",

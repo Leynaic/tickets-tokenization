@@ -55,11 +55,11 @@
     "plugins": [
         {
             "type": "npm",
-            "name": "@taqueria/plugin-ligo"
+            "name": "@taqueria/plugin-taquito"
         },
         {
             "type": "npm",
-            "name": "@taqueria/plugin-taquito"
+            "name": "@taqueria/plugin-ligo"
         }
     ]
 }

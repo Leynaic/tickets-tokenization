@@ -1,10 +1,10 @@
 {
   "checksum": "7f55987924612a8be8ae2e867882cac9",
-  "root": "nft_concerts@link-dev:./esy.json",
+  "root": "tickets-tokenization@link-dev:./esy.json",
   "node": {
-    "nft_concerts@link-dev:./esy.json": {
-      "id": "nft_concerts@link-dev:./esy.json",
-      "name": "nft_concerts",
+    "tickets-tokenization@link-dev:./esy.json": {
+      "id": "tickets-tokenization@link-dev:./esy.json",
+      "name": "tickets-tokenization",
       "version": "link-dev:./esy.json",
       "source": { "type": "link-dev", "path": ".", "manifest": "esy.json" },
       "overrides": [],

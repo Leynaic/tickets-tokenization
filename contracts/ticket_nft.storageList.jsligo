@@ -1,4 +1,4 @@
-#include "nft.jsligo"
+#include "ticket_nft.jsligo"
 
 const default_storage = {
     administrators: Set.literal(list(["tz1dKdRZox31LNdPXBzyy2miLZ5ZrWHPxsTR" as address])) as set<address>,

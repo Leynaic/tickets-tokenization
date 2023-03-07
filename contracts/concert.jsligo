@@ -1,0 +1,50 @@
+
+#import "@ligo/fa/lib/fa2/nft/NFT.jsligo" "NFT"
+#import "ticket_nft.jsligo" "TICKET_NFT"
+
+type storage = int;
+
+type concert = {
+  name : string
+};
+
+type ret = [list<operation>, storage];
+
+type parameter =
+  ["CreateConcert", concert]
+| ["Nothing"];
+
+const add = ([store, _c] : [storage, concert]) : ret => {
+
+  const initial_storage : TICKET_NFT.storage = {
+      administrators: Set.literal(list([Tezos.get_sender()])) as set<address>,
+      ledger: Big_map.empty as NFT.Ledger.t,
+      metadata: Big_map.empty as NFT.Metadata.t,
+      token_metadata: Big_map.empty as NFT.TokenMetadata.t,
+      operators: Big_map.empty as NFT.Operators.t,
+      token_ids: Set.empty as set<NFT.Storage.token_id>
+  };
+
+  let initial_delegate : option<key_hash> = (None() as option<key_hash>);
+  let create_contract = (p: [option<key_hash>, tez, TICKET_NFT.storage]) : [operation, address] =>
+      (Michelson `{ 
+            UNPAIR ;
+            UNPAIR ;
+            CREATE_CONTRACT
+#include "../artifacts/ticket_nft.tz"
+            ;
+            PAIR }`
+            as ((p: [option<key_hash>, tez, TICKET_NFT.storage]) => [operation, address]))(p)
+   ;
+
+  let originate : [operation, address] = create_contract(initial_delegate, 1 as tez, initial_storage);
+
+  return [list([originate[0]]), store + 1];
+};
+
+const main = ([action, store] : [parameter, storage]) : ret => {
+  return match (action, {
+    CreateConcert: (c: concert) => add ([store, c]),
+    Nothing      : ()           => [list([]) as list<operation>, store]
+  })
+};

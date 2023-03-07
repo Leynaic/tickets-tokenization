@@ -1,2 +1,5 @@
 .DS_Store
-nodes_modules/
+artifacts
+.taq/*-state.json
+.taq/config.local.*.json
+node_modules/
