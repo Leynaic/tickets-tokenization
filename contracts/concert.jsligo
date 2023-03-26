@@ -3,9 +3,12 @@
 #import "ticket_nft.jsligo" "TICKET_NFT"
 
 type storage = int;
+type storage2 = int;
 
 type concert = {
-  name : string
+  name : string,
+  capacity: int,
+  prize: int,
 };
 
 type ret = [list<operation>, storage];
@@ -15,26 +18,27 @@ type parameter =
 | ["Nothing"];
 
 const add = ([store, _c] : [storage, concert]) : ret => {
-
   const initial_storage : TICKET_NFT.storage = {
       administrators: Set.literal(list([Tezos.get_sender()])) as set<address>,
       ledger: Big_map.empty as NFT.Ledger.t,
       metadata: Big_map.empty as NFT.Metadata.t,
       token_metadata: Big_map.empty as NFT.TokenMetadata.t,
       operators: Big_map.empty as NFT.Operators.t,
-      token_ids: Set.empty as set<NFT.Storage.token_id>
+      token_ids: Set.empty as set<NFT.Storage.token_id>,
+      concert_owner: Tezos.get_sender() as address,
   };
 
   let initial_delegate : option<key_hash> = (None() as option<key_hash>);
-  let create_contract = (p: [option<key_hash>, tez, TICKET_NFT.storage]) : [operation, address] =>
+  let create_contract = (delegate: option<key_hash>, balance: tez, init: TICKET_NFT.storage) : [operation, address] =>
       (Michelson `{ 
             UNPAIR ;
             UNPAIR ;
             CREATE_CONTRACT
-#include "../artifacts/ticket_nft.tz"
+            #include "../artifacts/ticket_nft.tz"
             ;
             PAIR }`
-            as ((p: [option<key_hash>, tez, TICKET_NFT.storage]) => [operation, address]))(p)
+            as ((delegate: option<key_hash>, balance: tez, init: TICKET_NFT.storage) => [operation, address]))
+      (delegate, balance, init)
    ;
 
   let originate : [operation, address] = create_contract(initial_delegate, 1 as tez, initial_storage);

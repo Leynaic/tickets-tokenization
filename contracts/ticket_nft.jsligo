@@ -1,91 +1,152 @@
 #import "@ligo/fa/lib/fa2/nft/NFT.jsligo" "NFT"
 
-
-const errorMap : map<string,string> = Map.literal(list([
-  ["0", "Enter a positive and not null amount"],
-  ["1", "Operation not allowed, you need to be administrator"],
-  ["2", "You cannot sell more than your current balance"],
-  ["3", "Cannot find the offer you entered for buying"],
-  ["4", "You entered a quantity to buy than is more than the offer quantity"],
-  ["5", "Not enough funds, you need to pay at least quantity * offer price to get the tokens"],
-  ["6", "Cannot find the contract relative to implicit address"]
-]));
-
-
 type parameter =
   | ["Mint", nat, bytes, bytes] // token_id, name, description
-  | ["AddAdministrator" , address]
+  | ["Pre_mint", nat, bytes, bytes] // how many  token to mint, name, description
+  | ["Add_administrator", address]
   | ["Transfer", NFT.transfer]
+  | ["Buy", nat, nat] // token_id, address
   | ["Balance_of", NFT.balance_of]
   | ["Update_operators", NFT.update_operators];
 
 
-type storage =
-  {
-    administrators: set<address>,
-    ledger: NFT.Ledger.t,
-    metadata: NFT.Metadata.t,
-    token_metadata: NFT.TokenMetadata.t,
-    operators: NFT.Operators.t,
-    token_ids : set<NFT.Storage.token_id>
-  };
+type storage = {
+  administrators: set<address>,
+  ledger: NFT.Ledger.t,
+  metadata: NFT.Metadata.t,
+  token_metadata: NFT.TokenMetadata.t,
+  operators: NFT.Operators.t,
+  token_ids : set<NFT.Storage.token_id>,
+  concert_owner: address
+};
 
 type ret = [list<operation>, storage];
 
-const mint = (token_id: nat, name: bytes, description: bytes, s: storage) : ret => {
-  if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("1");
+const metadata : bytes = bytes`{
+  "name":"NFT Concerts",
+  "description":"NFT de place de concert",
+  "version":"0.0.1",
+  "license":{"name":"MIT"},
+  "authors":["Leynaic Brisse <leynaic.brisse@gmail.com>"],
+  "homepage":"",
+  "source":{
+    "tools":["Ligo"],
+    "location":"https://github.com/ligolang/contract-catalogue/tree/main/lib/fa2"},
+  "interfaces":["TZIP-012"],
+  "errors": [],
+  "views": []
+}`;
 
-  const token_info: map<string, bytes> =
-    Map.literal(list([
+const create_token = (name: bytes, description: bytes) : map<string, bytes> => {
+  return Map.literal(list([
     ["name", name],
     ["description",description],
     ["interfaces", (bytes `["TZIP-12"]`)],
     ["thumbnailUri", (bytes `ipfs://bafkreifiaudc2jk6vov35j7lokc4mby2zc7eqwatcrhdagjfhs4qnldpdy`)],
     ["symbol", (bytes `TICKET`)],
     ["decimals", (bytes `0`)]
-    ])) as map<string, bytes>;
+  ])) as map<string, bytes>;
+}
 
+const mint = (token_id: nat, name: bytes, description: bytes, s: storage) : ret => {
+  if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to mint.");
 
-  const metadata : bytes = bytes`{
-    "name":"NFT Concerts",
-    "description":"NFT de place de concert",
-    "version":"0.0.1",
-    "license":{"name":"MIT"},
-    "authors":["Leynaic Brisse <leynaic.brisse@gmail.com>"],
-    "homepage":"",
-    "source":{
-      "tools":["Ligo"],
-      "location":"https://github.com/ligolang/contract-catalogue/tree/main/lib/fa2"},
-    "interfaces":["TZIP-012"],
-    "errors": [],
-    "views": []
-  }`;
+  const token_info = create_token(name, description);
 
   return [list([]) as list<operation>,
     {...s,
       ledger: Big_map.add(token_id,Tezos.get_sender(),s.ledger) as NFT.Ledger.t,
       metadata : Big_map.literal(list([["",  bytes `tezos-storage:data`],["data", metadata]])),
-      token_metadata: Big_map.add(token_id, {token_id: token_id,token_info:token_info},s.token_metadata),
+      token_metadata: Big_map.add(token_id, { token_id: token_id, token_info: token_info }, s.token_metadata),
       operators: Big_map.empty as NFT.Operators.t,
       token_ids : Set.add(token_id,s.token_ids)
     }
   ]
 };
 
+const premint = (amount_token: nat, name: bytes, description: bytes, s: storage) : ret => {
+  if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to pre-mint.");
+  if(Set.size(s.token_ids) != (0 as nat)) return failwith("You can't pre-mint if there is already token in the contract.");
+
+  let token_ids_elt : list<nat> = list([]);
+  let new_token_id : nat = 0 as nat;
+  while (new_token_id != amount_token) {
+    token_ids_elt = list([new_token_id, ...token_ids_elt]);
+    new_token_id = new_token_id + (1 as nat);
+  }
+
+  const add_ledger = ([acc, id] : [NFT.Ledger.t, nat]) : NFT.Ledger.t => Big_map.add(id, s.concert_owner, acc);
+  const new_ledger = List.fold(add_ledger, token_ids_elt, s.ledger);
+
+  const add_metadata = ([acc, id] : [NFT.TokenMetadata.t, nat]) : NFT.TokenMetadata.t => Big_map.add(id, { token_id: id, token_info: create_token(name, description) }, acc);
+  const new_token_metadata : NFT.TokenMetadata.t = List.fold(add_metadata, token_ids_elt, s.token_metadata);
+
+  const add_token_ids = ([acc, id] : [set<NFT.Storage.token_id>, nat]) : set<NFT.Storage.token_id> => Set.add(id, acc);
+  const new_token_ids = List.fold(add_token_ids, token_ids_elt, s.token_ids);
+
+  return [list([]) as list<operation>,
+    {...s,
+      ledger: new_ledger,
+      metadata : Big_map.literal(list([["",  bytes `tezos-storage:data`],["data", metadata]])),
+      token_metadata: new_token_metadata,
+      operators: Big_map.empty as NFT.Operators.t,
+      token_ids : new_token_ids
+    }
+  ];
+};
+
+const buy = (token_id: nat, s: storage) : ret => {
+  const transfer_data = list([
+    {
+      from_: s.concert_owner,
+      txs: list([
+        {
+          to_: Tezos.get_sender(),
+          token_id: token_id,
+          amount: (1 as nat)
+        }
+      ])
+    }
+  ]);
+
+  const ret2 : [list<operation>, NFT.storage] = NFT.transfer(
+    transfer_data, {
+      ledger: s.ledger,
+      metadata: s.metadata,
+      token_metadata: s.token_metadata,
+      operators: s.operators,
+      token_ids: s.token_ids
+    }
+  );
+
+  return [
+    ret2[0],
+    {...s,
+      ledger: ret2[1].ledger,
+      metadata: ret2[1].metadata,
+      token_metadata: ret2[1].token_metadata,
+      operators: ret2[1].operators,
+      token_ids: ret2[1].token_ids
+    }
+  ];
+};
+
 const main = ([p, s]: [parameter,storage]): ret =>
   match(p, { 
     Mint: (p: [nat, bytes, bytes]) => mint(p[0], p[1], p[2], s),
-    AddAdministrator : (p : address) => {
+    Pre_mint: (p: [nat, bytes, bytes]) => premint(p[0], p[1], p[2], s),
+    Add_administrator : (p : address) => {
       if (Set.mem(Tezos.get_sender(), s.administrators)){  
-        return [list([]),{...s,administrators:Set.add(p, s.administrators)}]
+        return [list([]), {...s, administrators:Set.add(p, s.administrators) }]
       } else {
-        return failwith("1");
+        return failwith("You must be part of the administrators of this contract to add an administrator.");
       }
     },
     Transfer: (p: NFT.transfer) => {
       const ret2 : [list<operation>, NFT.storage] = NFT.transfer(p,{ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,token_ids : s.token_ids});
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,token_ids:ret2[1].token_ids}];
     },
+    Buy: (p: [nat, nat]) => buy(p[0], s),
     Balance_of: (p: NFT.balance_of) => {
       const ret2 : [list<operation>, NFT.storage] = NFT.balance_of(p,{ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,token_ids : s.token_ids});
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,token_ids:ret2[1].token_ids}];
