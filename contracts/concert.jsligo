@@ -28,7 +28,8 @@ const add = ([store, c] : [storage, concert]) : ret => {
       token_ids: Set.empty as set<NFT.Storage.token_id>,
       creator_of_concert: Tezos.get_sender() as address,
       capacity: c.capacity,
-      ticket_price: c.price,
+      ticket_price: c.ticket_price,
+      has_been_withdraw: false,
   };
 
   let initial_delegate : option<key_hash> = (None() as option<key_hash>);

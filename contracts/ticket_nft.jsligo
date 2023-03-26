@@ -21,7 +21,8 @@ type storage = {
   metadata: NFT.Metadata.t,
   token_metadata: NFT.TokenMetadata.t,
   operators: NFT.Operators.t,
-  token_ids: set<NFT.Storage.token_id>
+  token_ids: set<NFT.Storage.token_id>,
+  has_been_withdraw: bool,
 };
 
 type ret = [list<operation>, storage];
@@ -53,6 +54,7 @@ const create_token = (name: bytes, description: bytes) : map<string, bytes> => {
 }
 
 const mint = (token_id: nat, name: bytes, description: bytes, s: storage) : ret => {
+  if (s.has_been_withdraw) return failwith("This contract has been withdraw.");
   if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to mint.");
 
   const token_info = create_token(name, description);
@@ -69,6 +71,8 @@ const mint = (token_id: nat, name: bytes, description: bytes, s: storage) : ret 
 };
 
 const premint = (name: bytes, description: bytes, s: storage) : ret => {
+  if (s.has_been_withdraw) return failwith("This contract has been withdraw.");
+
   if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to pre-mint.");
   if(Set.size(s.token_ids) != (0 as nat)) return failwith("You can't pre-mint if there is already token in the contract.");
 
@@ -100,6 +104,7 @@ const premint = (name: bytes, description: bytes, s: storage) : ret => {
 };
 
 const buy = (token_id: nat, s: storage) : ret => {
+  if (s.has_been_withdraw) return failwith("This contract has been withdraw.");
   if(! Set.mem(token_id, s.token_ids)) return failwith("This token doesn't exist.");
   if(Tezos.get_amount() != s.ticket_price) return failwith("You must pay the ticket price.");
 
@@ -226,6 +231,8 @@ const burn = (token_id: nat, s: storage) : ret => {
 };
 
 const withdraw = (s: storage): ret => {
+  if (s.has_been_withdraw) return failwith("The money has already been withdrawn.");
+
   if (Tezos.get_sender() != s.creator_of_concert) {
     return failwith("You must be the creator of the concert to withdraw the money.");
   } else {
@@ -237,7 +244,7 @@ const withdraw = (s: storage): ret => {
       let operations : list<operation> = list([withdrawOperation]);
 
       // On retourne la liste d'opération contenant l'opération de transfert et le storage
-      return [operations, s];
+      return [operations, {...s, has_been_withdraw: true }];
   }
 }
 

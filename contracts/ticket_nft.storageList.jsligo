@@ -10,4 +10,5 @@ const default_storage = {
     token_metadata: Big_map.empty as NFT.TokenMetadata.t,
     operators: Big_map.empty as NFT.Operators.t,
     token_ids: Set.empty as set<NFT.Storage.token_id>,
+    has_been_withdraw: false
 };
