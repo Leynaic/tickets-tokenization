@@ -6,8 +6,6 @@ type storage = int;
 type storage2 = int;
 
 type concert = {
-  name : bytes,
-  description : bytes,
   capacity: nat,
   ticket_price: tez,
 };

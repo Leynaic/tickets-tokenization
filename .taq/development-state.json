@@ -1,36 +1,6 @@
 {
     "operations": {},
     "tasks": {
-        "@taqueria/plugin-ligo.compile.1679844566931": {
-            "task": "compile",
-            "plugin": "@taqueria/plugin-ligo",
-            "time": 1679844566931,
-            "output": [
-                {
-                    "contract": "ticket_nft.jsligo",
-                    "artifact": "Not compiled"
-                }
-            ]
-        },
-        "@taqueria/plugin-ligo.compile.1679844585366": {
-            "task": "compile",
-            "plugin": "@taqueria/plugin-ligo",
-            "time": 1679844585366,
-            "output": [
-                {
-                    "contract": "ticket_nft.jsligo",
-                    "artifact": "artifacts/ticket_nft.tz"
-                },
-                {
-                    "contract": "ticket_nft.storageList.jsligo",
-                    "artifact": "artifacts/ticket_nft.default_storage.tz\n"
-                },
-                {
-                    "contract": "ticket_nft.parameterList.jsligo",
-                    "artifact": ""
-                }
-            ]
-        },
         "@taqueria/plugin-ligo.compile.1679845262706": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
@@ -138,6 +108,44 @@
                 },
                 {
                     "contract": "ticket_nft.parameterList.jsligo",
+                    "artifact": ""
+                }
+            ]
+        },
+        "@taqueria/plugin-ligo.compile.1679846277509": {
+            "task": "compile",
+            "plugin": "@taqueria/plugin-ligo",
+            "time": 1679846277509,
+            "output": [
+                {
+                    "contract": "concert.jsligo",
+                    "artifact": "artifacts/concert.tz"
+                },
+                {
+                    "contract": "concert.storageList.jsligo",
+                    "artifact": "artifacts/concert.default_storage.tz\n"
+                },
+                {
+                    "contract": "concert.parameterList.jsligo",
+                    "artifact": ""
+                }
+            ]
+        },
+        "@taqueria/plugin-ligo.compile.1679847679871": {
+            "task": "compile",
+            "plugin": "@taqueria/plugin-ligo",
+            "time": 1679847679872,
+            "output": [
+                {
+                    "contract": "concert.jsligo",
+                    "artifact": "artifacts/concert.tz"
+                },
+                {
+                    "contract": "concert.storageList.jsligo",
+                    "artifact": "artifacts/concert.default_storage.tz\n"
+                },
+                {
+                    "contract": "concert.parameterList.jsligo",
                     "artifact": ""
                 }
             ]

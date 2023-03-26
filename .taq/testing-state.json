@@ -1,48 +1,6 @@
 {
     "operations": {},
     "tasks": {
-        "@taqueria/plugin-taquito.deploy.1679843111901": {
-            "task": "deploy",
-            "plugin": "@taqueria/plugin-taquito",
-            "time": 1679843111901,
-            "output": [
-                {
-                    "contract": "ticket_nft.tz",
-                    "address": "KT1FBd6Gut4MVVjhGuurDC1Uk1Qz3q2YAfHv",
-                    "alias": "ticket_nft",
-                    "balanceInMutez": "0",
-                    "destination": "https://ghostnet.ecadinfra.com"
-                }
-            ]
-        },
-        "@taqueria/plugin-taquito.deploy.1679843664551": {
-            "task": "deploy",
-            "plugin": "@taqueria/plugin-taquito",
-            "time": 1679843664551,
-            "output": [
-                {
-                    "contract": "ticket_nft.tz",
-                    "address": "KT1RtidvzwS2zVy5d3d7qZ5BKmHwdjSDmMj2",
-                    "alias": "ticket_nft",
-                    "balanceInMutez": "0",
-                    "destination": "https://ghostnet.ecadinfra.com"
-                }
-            ]
-        },
-        "@taqueria/plugin-taquito.deploy.1679844601482": {
-            "task": "deploy",
-            "plugin": "@taqueria/plugin-taquito",
-            "time": 1679844601482,
-            "output": [
-                {
-                    "contract": "ticket_nft.tz",
-                    "address": "KT1Ajuue8PdPFoKYdra5WRmkzrjhnFysfhmx",
-                    "alias": "ticket_nft",
-                    "balanceInMutez": "0",
-                    "destination": "https://ghostnet.ecadinfra.com"
-                }
-            ]
-        },
         "@taqueria/plugin-taquito.deploy.1679845282064": {
             "task": "deploy",
             "plugin": "@taqueria/plugin-taquito",
@@ -66,6 +24,48 @@
                     "contract": "ticket_nft.tz",
                     "address": "KT1BBdjgLByEV3TkLow6DdVvN8xWcKz9uNvo",
                     "alias": "ticket_nft",
+                    "balanceInMutez": "0",
+                    "destination": "https://ghostnet.ecadinfra.com"
+                }
+            ]
+        },
+        "@taqueria/plugin-taquito.deploy.1679846294532": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1679846294532,
+            "output": [
+                {
+                    "contract": "concert.tz",
+                    "address": "KT1SvV3rNE8dPFTzj1ck2bt9D1EH6h5TqHUc",
+                    "alias": "concert",
+                    "balanceInMutez": "0",
+                    "destination": "https://ghostnet.ecadinfra.com"
+                }
+            ]
+        },
+        "@taqueria/plugin-taquito.deploy.1679847629401": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1679847629401,
+            "output": [
+                {
+                    "contract": "concert.tz",
+                    "address": "KT1X4US73FbhEpNBryfvz46qk7yTvRfUdU45",
+                    "alias": "concert",
+                    "balanceInMutez": "0",
+                    "destination": "https://ghostnet.ecadinfra.com"
+                }
+            ]
+        },
+        "@taqueria/plugin-taquito.deploy.1679847695760": {
+            "task": "deploy",
+            "plugin": "@taqueria/plugin-taquito",
+            "time": 1679847695760,
+            "output": [
+                {
+                    "contract": "concert.tz",
+                    "address": "KT1Um18wP2yeFZ75UBbV3rwCiVemUJe8TSdC",
+                    "alias": "concert",
                     "balanceInMutez": "0",
                     "destination": "https://ghostnet.ecadinfra.com"
                 }
