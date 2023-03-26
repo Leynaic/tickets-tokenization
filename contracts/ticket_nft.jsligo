@@ -5,7 +5,8 @@ type parameter =
   | ["Pre_mint", bytes, bytes] // name, description
   | ["Add_administrator", address]
   | ["Transfer", NFT.transfer]
-  | ["Buy_ticket", nat] // token_id, address
+  | ["Buy_ticket", nat] // token_id
+  | ["Burn_ticket", nat] // token_id
   | ["Balance_of", NFT.balance_of]
   | ["Update_operators", NFT.update_operators]
   | ["Withdraw"];
@@ -162,6 +163,68 @@ const buy = (token_id: nat, s: storage) : ret => {
   ];
 };
 
+const burn = (token_id: nat, s: storage) : ret => {
+  if(! Set.mem(token_id, s.token_ids)) return failwith("This token doesn't exist.");
+
+  const opt_owner_of_token = Big_map.find_opt(token_id, s.ledger);
+  const owner_of_token = Option.unopt_with_error(opt_owner_of_token, "This token doesn't exist.");
+  
+  if (owner_of_token != Tezos.get_sender()) return failwith("You are not the owner of this token.");
+
+  const transfer_data = list([
+    {
+      from_: Tezos.get_sender(),
+      txs: list([
+        {
+          to_: "tz1burnburnburnburnburnburnburjAYjjX" as address,
+          token_id: token_id,
+          amount: (1 as nat)
+        }
+      ])
+    }
+  ]);
+
+  const s2 = {
+      ledger: s.ledger,
+      metadata: s.metadata,
+      token_metadata: s.token_metadata,
+      operators: s.operators,
+      token_ids: s.token_ids
+    };
+
+   const process_atomic_transfer = (from_ : address) : (ledger: NFT.Ledger.t, t: NFT.atomic_trans) => NFT.Ledger.t => {
+     return (ledger: NFT.Ledger.t, t: NFT.atomic_trans) : NFT.Ledger.t => {
+        const {to_,token_id,amount} = t;
+        if(amount != (1 as nat)) {return failwith(NFT.Errors.wrong_amount);}
+        else{
+         NFT.Storage.assert_token_exist (s2, token_id);
+         const ledger = NFT.Ledger.transfer_token_from_user_to_user (ledger, token_id, from_, to_);
+         return ledger;
+        }
+     };
+   };
+
+   const process_single_transfer = ([ledger, t]: [NFT.Ledger.t, NFT.transfer_from]) : NFT.Ledger.t => {
+      const {from_,txs} = t;
+      const ledger = List.fold_left (process_atomic_transfer (from_), ledger, txs);
+      ledger
+   };
+   
+   const ledger = List.fold_left (process_single_transfer, s.ledger, transfer_data);
+   const ret2 = NFT.Storage.set_ledger (s2, ledger);
+
+  return [
+    list([]),
+    {...s,
+      ledger: ret2.ledger,
+      metadata: ret2.metadata,
+      token_metadata: ret2.token_metadata,
+      operators: ret2.operators,
+      token_ids: ret2.token_ids
+    }
+  ];
+};
+
 const withdraw = (s: storage): ret => {
   if (Tezos.get_sender() != s.creator_of_concert) {
     return failwith("You must be the creator of the concert to withdraw the money.");
@@ -190,6 +253,7 @@ const main = ([p, s]: [parameter,storage]): ret =>
       }
     },
     Buy_ticket: (p: nat) => buy(p, s),
+    Burn_ticket: (p: nat) => burn(p, s),
     Withdraw: () => withdraw(s),
     Transfer: (p: NFT.transfer) => {
       const ret2 : [list<operation>, NFT.storage] = NFT.transfer(p,{ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,token_ids : s.token_ids});
