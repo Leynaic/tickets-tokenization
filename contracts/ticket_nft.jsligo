@@ -2,22 +2,25 @@
 
 type parameter =
   | ["Mint", nat, bytes, bytes] // token_id, name, description
-  | ["Pre_mint", nat, bytes, bytes] // how many  token to mint, name, description
+  | ["Pre_mint", bytes, bytes] // name, description
   | ["Add_administrator", address]
   | ["Transfer", NFT.transfer]
-  | ["Buy", nat, nat] // token_id, address
+  | ["Buy_ticket", nat] // token_id, address
   | ["Balance_of", NFT.balance_of]
-  | ["Update_operators", NFT.update_operators];
+  | ["Update_operators", NFT.update_operators]
+  | ["Withdraw"];
 
 
 type storage = {
+  creator_of_concert: address,
+  ticket_price: tez,
+  capacity: nat,
   administrators: set<address>,
   ledger: NFT.Ledger.t,
   metadata: NFT.Metadata.t,
   token_metadata: NFT.TokenMetadata.t,
   operators: NFT.Operators.t,
-  token_ids : set<NFT.Storage.token_id>,
-  concert_owner: address
+  token_ids: set<NFT.Storage.token_id>
 };
 
 type ret = [list<operation>, storage];
@@ -64,18 +67,18 @@ const mint = (token_id: nat, name: bytes, description: bytes, s: storage) : ret 
   ]
 };
 
-const premint = (amount_token: nat, name: bytes, description: bytes, s: storage) : ret => {
+const premint = (name: bytes, description: bytes, s: storage) : ret => {
   if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to pre-mint.");
   if(Set.size(s.token_ids) != (0 as nat)) return failwith("You can't pre-mint if there is already token in the contract.");
 
   let token_ids_elt : list<nat> = list([]);
   let new_token_id : nat = 0 as nat;
-  while (new_token_id != amount_token) {
+  while (new_token_id != s.capacity) {
     token_ids_elt = list([new_token_id, ...token_ids_elt]);
     new_token_id = new_token_id + (1 as nat);
   }
 
-  const add_ledger = ([acc, id] : [NFT.Ledger.t, nat]) : NFT.Ledger.t => Big_map.add(id, s.concert_owner, acc);
+  const add_ledger = ([acc, id] : [NFT.Ledger.t, nat]) : NFT.Ledger.t => Big_map.add(id, Tezos.get_self_address(), acc);
   const new_ledger = List.fold(add_ledger, token_ids_elt, s.ledger);
 
   const add_metadata = ([acc, id] : [NFT.TokenMetadata.t, nat]) : NFT.TokenMetadata.t => Big_map.add(id, { token_id: id, token_info: create_token(name, description) }, acc);
@@ -96,9 +99,18 @@ const premint = (amount_token: nat, name: bytes, description: bytes, s: storage)
 };
 
 const buy = (token_id: nat, s: storage) : ret => {
+  if(! Set.mem(token_id, s.token_ids)) return failwith("This token doesn't exist.");
+  if(Tezos.get_amount() != s.ticket_price) return failwith("You must pay the ticket price.");
+
+  const opt_owner_of_token = Big_map.find_opt(token_id, s.ledger);
+  const owner_of_token = Option.unopt_with_error(opt_owner_of_token, "This token doesn't exist.");
+  
+  if (owner_of_token != Tezos.get_self_address()) return failwith("This token is already purchased.");
+
+
   const transfer_data = list([
     {
-      from_: s.concert_owner,
+      from_: Tezos.get_self_address(),
       txs: list([
         {
           to_: Tezos.get_sender(),
@@ -109,32 +121,67 @@ const buy = (token_id: nat, s: storage) : ret => {
     }
   ]);
 
-  const ret2 : [list<operation>, NFT.storage] = NFT.transfer(
-    transfer_data, {
+  const s2 = {
       ledger: s.ledger,
       metadata: s.metadata,
       token_metadata: s.token_metadata,
       operators: s.operators,
       token_ids: s.token_ids
-    }
-  );
+    };
+
+   const process_atomic_transfer = (from_ : address) : (ledger: NFT.Ledger.t, t: NFT.atomic_trans) => NFT.Ledger.t => {
+     return (ledger: NFT.Ledger.t, t: NFT.atomic_trans) : NFT.Ledger.t => {
+        const {to_,token_id,amount} = t;
+        if(amount != (1 as nat)) {return failwith(NFT.Errors.wrong_amount);}
+        else{
+         NFT.Storage.assert_token_exist (s2, token_id);
+         const ledger = NFT.Ledger.transfer_token_from_user_to_user (ledger, token_id, from_, to_);
+         return ledger;
+        }
+     };
+   };
+
+   const process_single_transfer = ([ledger, t]: [NFT.Ledger.t, NFT.transfer_from]) : NFT.Ledger.t => {
+      const {from_,txs} = t;
+      const ledger = List.fold_left (process_atomic_transfer (from_), ledger, txs);
+      ledger
+   };
+   
+   const ledger = List.fold_left (process_single_transfer, s.ledger, transfer_data);
+   const ret2 = NFT.Storage.set_ledger (s2, ledger);
 
   return [
-    ret2[0],
+    list([]),
     {...s,
-      ledger: ret2[1].ledger,
-      metadata: ret2[1].metadata,
-      token_metadata: ret2[1].token_metadata,
-      operators: ret2[1].operators,
-      token_ids: ret2[1].token_ids
+      ledger: ret2.ledger,
+      metadata: ret2.metadata,
+      token_metadata: ret2.token_metadata,
+      operators: ret2.operators,
+      token_ids: ret2.token_ids
     }
   ];
 };
 
+const withdraw = (s: storage): ret => {
+  if (Tezos.get_sender() != s.creator_of_concert) {
+    return failwith("You must be the creator of the concert to withdraw the money.");
+  } else {
+      let opt_receiver : option<contract<unit>> = Tezos.get_contract_opt(Tezos.get_sender());
+      let amount : tez = Tezos.get_balance();
+      let receiver : contract<unit> = Option.unopt_with_error(opt_receiver, "The receiver is not a contract.");
+
+      let withdrawOperation : operation = Tezos.transaction(unit, amount, receiver) ;
+      let operations : list<operation> = list([withdrawOperation]);
+
+      // On retourne la liste d'opération contenant l'opération de transfert et le storage
+      return [operations, s];
+  }
+}
+
 const main = ([p, s]: [parameter,storage]): ret =>
   match(p, { 
     Mint: (p: [nat, bytes, bytes]) => mint(p[0], p[1], p[2], s),
-    Pre_mint: (p: [nat, bytes, bytes]) => premint(p[0], p[1], p[2], s),
+    Pre_mint: (p: [bytes, bytes]) => premint(p[0], p[1], s),
     Add_administrator : (p : address) => {
       if (Set.mem(Tezos.get_sender(), s.administrators)){  
         return [list([]), {...s, administrators:Set.add(p, s.administrators) }]
@@ -142,11 +189,12 @@ const main = ([p, s]: [parameter,storage]): ret =>
         return failwith("You must be part of the administrators of this contract to add an administrator.");
       }
     },
+    Buy_ticket: (p: nat) => buy(p, s),
+    Withdraw: () => withdraw(s),
     Transfer: (p: NFT.transfer) => {
       const ret2 : [list<operation>, NFT.storage] = NFT.transfer(p,{ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,token_ids : s.token_ids});
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,token_ids:ret2[1].token_ids}];
     },
-    Buy: (p: [nat, nat]) => buy(p[0], s),
     Balance_of: (p: NFT.balance_of) => {
       const ret2 : [list<operation>, NFT.storage] = NFT.balance_of(p,{ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,token_ids : s.token_ids});
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,token_ids:ret2[1].token_ids}];

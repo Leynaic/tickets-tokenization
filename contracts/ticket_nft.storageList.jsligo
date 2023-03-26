@@ -1,11 +1,13 @@
 #include "ticket_nft.jsligo"
 
 const default_storage = {
+    creator_of_concert: "tz1dKdRZox31LNdPXBzyy2miLZ5ZrWHPxsTR" as address,
+    ticket_price: 5 as tez,
+    capacity: 10 as nat,
     administrators: Set.literal(list(["tz1dKdRZox31LNdPXBzyy2miLZ5ZrWHPxsTR" as address])) as set<address>,
     ledger: Big_map.empty as NFT.Ledger.t,
     metadata: Big_map.empty as NFT.Metadata.t,
     token_metadata: Big_map.empty as NFT.TokenMetadata.t,
     operators: Big_map.empty as NFT.Operators.t,
     token_ids: Set.empty as set<NFT.Storage.token_id>,
-    concert_owner: "tz1dKdRZox31LNdPXBzyy2miLZ5ZrWHPxsTR" as address
 };

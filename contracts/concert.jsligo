@@ -6,9 +6,10 @@ type storage = int;
 type storage2 = int;
 
 type concert = {
-  name : string,
-  capacity: int,
-  prize: int,
+  name : bytes,
+  description : bytes,
+  capacity: nat,
+  ticket_price: tez,
 };
 
 type ret = [list<operation>, storage];
@@ -17,7 +18,7 @@ type parameter =
   ["CreateConcert", concert]
 | ["Nothing"];
 
-const add = ([store, _c] : [storage, concert]) : ret => {
+const add = ([store, c] : [storage, concert]) : ret => {
   const initial_storage : TICKET_NFT.storage = {
       administrators: Set.literal(list([Tezos.get_sender()])) as set<address>,
       ledger: Big_map.empty as NFT.Ledger.t,
@@ -25,7 +26,9 @@ const add = ([store, _c] : [storage, concert]) : ret => {
       token_metadata: Big_map.empty as NFT.TokenMetadata.t,
       operators: Big_map.empty as NFT.Operators.t,
       token_ids: Set.empty as set<NFT.Storage.token_id>,
-      concert_owner: Tezos.get_sender() as address,
+      creator_of_concert: Tezos.get_sender() as address,
+      capacity: c.capacity,
+      ticket_price: c.price,
   };
 
   let initial_delegate : option<key_hash> = (None() as option<key_hash>);
