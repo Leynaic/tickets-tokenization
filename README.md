@@ -75,7 +75,7 @@ Ajout un administrateur à la liste des administrateurs.
 
 #### Paramètres
 
-- `token_id` `nat` : Token du jeton (NFT) à brûler.
+- `token_id` `nat` : ID du token du jeton (NFT) à brûler.
 
 #### Action
 
@@ -90,7 +90,7 @@ Transfère la propriété du NFT à l'adresse de BURN de la blockchain tezos.
 
 #### Paramètres
 
-- `token_id` `nat` : Token du jeton (NFT) à acheter.
+- `token_id` `nat` : ID du token du jeton (NFT) à acheter.
 
 #### Action
 
