@@ -1,4 +1,4 @@
-# tickets-tokenization
+# Tokenization de tickets de concert.
 
 Application de tokenization de billets de concert sur la blockchain Tezos.
 
@@ -57,7 +57,7 @@ Ne fait rien.
 
 Ce contrat est unique pour un concert. Il permet la vente des tickets, l'annulation d'un concert, le burn d'un ticket, le remboursement des tickets, et la validation (withdraw) d'un concert. Il possède dix entrypoints
 
-### add_administrator
+### `add_administrator`
 
 #### Paramètres
 
@@ -71,7 +71,7 @@ Ajout un administrateur à la liste des administrateurs.
 
 - L'adresse appelant ce endpoint doit être administrateur.
 
-### burn_ticket
+### `burn_ticket`
 
 #### Paramètres
 
@@ -86,7 +86,7 @@ Transfère la propriété du NFT à l'adresse de BURN de la blockchain tezos.
 - Le NFT doit exister.
 - Vous devez détenir le NFT sur lequel l'action est effectué.
 
-### buy_ticket
+### `buy_ticket`
 
 #### Paramètres
 
@@ -101,8 +101,9 @@ Transfère la propriété du NFT à l'adresse de l'envoyeur.
 - Le NFT doit exister.
 - Le NFT ne doit pas être déjà acheté.
 - Vous payez la somme en MUTEZ du prix du ticket.
+- Le concert ne doit pas être annulé ou withdrawn.
 
-### pre_mint
+### `pre_mint`
 
 #### Paramètres
 
@@ -118,8 +119,9 @@ MINT le nombre de NFT équivalent à la capacité du concert.
 - Cette entrypoint doit être appelé en premier (avant `mint`)
 - Il est appelable qu'une seul fois.
 - Vous devez être administrateur.
+- Le concert ne doit pas être annulé ou withdrawn.
 
-### refund
+### `refund`
 
 #### Paramètres
 
@@ -127,17 +129,16 @@ Aucun.
 
 #### Action
 
-Rembourse tout les propriétaires de ticket, qui n'ont pas été BURN.
+Rembourse tout les propriétaires de ticket, qui n'ont pas été BURN, annule le concert.
 
 #### Remarque
 
 - Bloque les achats.
 - Il est appelable qu'une seul fois.
 - Vous devez être administrateur.
+- Le concert ne doit pas être annulé ou withdrawn.
 
-### withdraw
-
-
+### `withdraw`
 
 #### Paramètres
 
@@ -145,30 +146,42 @@ Aucun.
 
 #### Action
 
-Le totalité de la somme récolté lors des achats de ticket (balance du contrat) est envoyé au porte-monnaie du créateur.
+Le totalité de la somme récoltée lors des achats de ticket (balance du contrat) est envoyé au porte-monnaie du créateur. Valide le concert.
 
 #### Remarque
 
 - Bloque les achats.
 - Il est appelable qu'une seul fois.
 - Vous devez être le créateur du concert.
+- Le concert ne doit pas être annulé ou withdrawn.
 
-### mint
+### `mint`
+
+#### Remarque
+
+- Présent pour la norme FA2.
+- Pas utile.
+- Le concert ne doit pas être annulé ou withdrawn.
+- La capacité du concert ne doit pas être atteint.
+
+### `transfer`
+
+#### Remarque
+
+- Présent pour la norme FA2.
+- Pas utile.
+- Le concert ne doit pas être annulé ou withdrawn.
+
+### `update_operators`
+
+#### Remarque
 
 - Présent pour la norme FA2.
 - Pas utile.
 
-### transfer
+### `balance_of`
 
-- Présent pour la norme FA2.
-- Pas utile.
-
-### update_operators
-
-- Présent pour la norme FA2.
-- Pas utile.
-
-### balance_of
+#### Remarque
 
 - Présent pour la norme FA2.
 - Pas utile.
