@@ -43,6 +43,7 @@ Ce contrat permet de déployer les contrats permettant de gérer les NFTs pour u
 
 - `capacity` `nat` : La capacité d'un concert soit le nombre maximum de NFT autorisé.
 - `ticket_price` `mutez` : Le prix pour un NFT, attention 1 mutez vaut 0.000001 tez.
+- `creator_of_concert` `address` : Le créateur du concert (ne pas se tromper !)
 
 #### Action
 
@@ -51,6 +52,8 @@ Déploie un nouveau contrat sur la blockchain Tezos.
 #### Remarque
 
 - Vous devez ajouter une certaine somme en Tezos lors de la transaction pour pouvoir déployer le contrat.
+- Seul le créateur du concert pourra REFUND et WITHDRAW !
+
 
 ### `nothing`
 
