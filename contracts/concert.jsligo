@@ -27,7 +27,8 @@ const add = ([store, c] : [storage, concert]) : ret => {
       creator_of_concert: Tezos.get_sender() as address,
       capacity: c.capacity,
       ticket_price: c.ticket_price,
-      has_been_withdraw: false,
+      has_been_withdrawn: false,
+      has_been_cancelled: false,
   };
 
   let initial_delegate : option<key_hash> = (None() as option<key_hash>);
