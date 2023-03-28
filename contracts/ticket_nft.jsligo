@@ -66,7 +66,9 @@ const mint = (token_id: nat, name: bytes, description: bytes, s: storage) : ret 
   if (s.has_been_withdrawn) return failwith("This concert's money has been withdraw.");
   if (s.has_been_cancelled) return failwith("This concert has been cancelled.");
 
-  if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to mint.");
+  if (!Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to mint.");
+  if (Set.size(s.token_ids) == s.capacity) return failwith("You can't mint more ticket than the capacity of the concert.");
+
 
   const token_info = create_token(name, description);
 
@@ -85,8 +87,8 @@ const premint = (nft_info: nft_info, s: storage) : ret => {
   if (s.has_been_withdrawn) return failwith("This concert's money has been withdraw.");
   if (s.has_been_cancelled) return failwith("This concert has been cancelled.");
 
-  if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to pre-mint.");
-  if(Set.size(s.token_ids) != (0 as nat)) return failwith("You can't pre-mint if there is already token in the contract.");
+  if (!Set.mem(Tezos.get_sender(), s.administrators)) return failwith("You must be part of the administrators of this contract to pre-mint.");
+  if (Set.size(s.token_ids) != (0 as nat)) return failwith("You can't pre-mint if there is already token in the contract.");
 
   let token_ids_elt : list<nat> = list([]);
   let new_token_id : nat = 0 as nat;
@@ -115,7 +117,6 @@ const premint = (nft_info: nft_info, s: storage) : ret => {
   ];
 };
 
-
 const transfer_nft = (transfer_data: NFT.transfer, s: storage): ret => {
     const s2 = {
       ledger: s.ledger,
@@ -128,7 +129,7 @@ const transfer_nft = (transfer_data: NFT.transfer, s: storage): ret => {
    const process_atomic_transfer = (from_ : address) : (ledger: NFT.Ledger.t, t: NFT.atomic_trans) => NFT.Ledger.t => {
      return (ledger: NFT.Ledger.t, t: NFT.atomic_trans) : NFT.Ledger.t => {
         const {to_,token_id,amount} = t;
-        if(amount != (1 as nat)) {return failwith(NFT.Errors.wrong_amount);}
+        if (amount != (1 as nat)) { return failwith(NFT.Errors.wrong_amount); }
         else{
          NFT.Storage.assert_token_exist (s2, token_id);
          const ledger = NFT.Ledger.transfer_token_from_user_to_user (ledger, token_id, from_, to_);
@@ -162,8 +163,8 @@ const buy = (token_id: nat, s: storage) : ret => {
   if (s.has_been_withdrawn) return failwith("This concert's money has been withdraw.");
   if (s.has_been_cancelled) return failwith("This concert has been cancelled.");
 
-  if(! Set.mem(token_id, s.token_ids)) return failwith("This token doesn't exist.");
-  if(Tezos.get_amount() != s.ticket_price) return failwith("You must pay the ticket price.");
+  if (!Set.mem(token_id, s.token_ids)) return failwith("This token doesn't exist.");
+  if (Tezos.get_amount() != s.ticket_price) return failwith("You must pay the ticket price.");
 
   const opt_owner_of_token = Big_map.find_opt(token_id, s.ledger);
   const owner_of_token = Option.unopt_with_error(opt_owner_of_token, "This token doesn't exist.");
@@ -188,7 +189,7 @@ const buy = (token_id: nat, s: storage) : ret => {
 };
 
 const burn = (token_id: nat, s: storage) : ret => {
-  if(! Set.mem(token_id, s.token_ids)) return failwith("This token doesn't exist.");
+  if (!Set.mem(token_id, s.token_ids)) return failwith("This token doesn't exist.");
 
   const opt_owner_of_token = Big_map.find_opt(token_id, s.ledger);
   const owner_of_token = Option.unopt_with_error(opt_owner_of_token, "This token doesn't exist.");

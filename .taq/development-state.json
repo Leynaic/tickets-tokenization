@@ -55,21 +55,10 @@
                 }
             ]
         },
-        "@taqueria/plugin-ligo.compile.1680001364767": {
+        "@taqueria/plugin-ligo.compile.1680013237875": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1680001364767,
-            "output": [
-                {
-                    "contract": "ticket_nft.jsligo",
-                    "artifact": "Not compiled"
-                }
-            ]
-        },
-        "@taqueria/plugin-ligo.compile.1680001407360": {
-            "task": "compile",
-            "plugin": "@taqueria/plugin-ligo",
-            "time": 1680001407360,
+            "time": 1680013237876,
             "output": [
                 {
                     "contract": "ticket_nft.jsligo",
@@ -85,10 +74,21 @@
                 }
             ]
         },
-        "@taqueria/plugin-ligo.compile.1680002429515": {
+        "@taqueria/plugin-ligo.compile.1680013409277": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1680002429516,
+            "time": 1680013409278,
+            "output": [
+                {
+                    "contract": "concert.jsligo",
+                    "artifact": "Not compiled"
+                }
+            ]
+        },
+        "@taqueria/plugin-ligo.compile.1680013435907": {
+            "task": "compile",
+            "plugin": "@taqueria/plugin-ligo",
+            "time": 1680013435907,
             "output": [
                 {
                     "contract": "concert.jsligo",
@@ -104,10 +104,10 @@
                 }
             ]
         },
-        "@taqueria/plugin-ligo.compile.1680002698584": {
+        "@taqueria/plugin-ligo.compile.1680013828225": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1680002698585,
+            "time": 1680013828225,
             "output": [
                 {
                     "contract": "ticket_nft.jsligo",
@@ -123,10 +123,10 @@
                 }
             ]
         },
-        "@taqueria/plugin-ligo.compile.1680002712874": {
+        "@taqueria/plugin-ligo.compile.1680013842483": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1680002712874,
+            "time": 1680013842483,
             "output": [
                 {
                     "contract": "concert.jsligo",

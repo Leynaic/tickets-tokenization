@@ -3,11 +3,11 @@
 #import "ticket_nft.jsligo" "TICKET_NFT"
 
 type storage = int;
-type storage2 = int;
 
 type concert = {
   capacity: nat,
   ticket_price: tez,
+  creator_of_concert: address,
 };
 
 type ret = [list<operation>, storage];
@@ -18,13 +18,13 @@ type parameter =
 
 const add = ([store, c] : [storage, concert]) : ret => {
   const initial_storage : TICKET_NFT.storage = {
-      administrators: Set.literal(list([Tezos.get_sender()])) as set<address>,
+      administrators: Set.literal(list([Tezos.get_sender(), c.creator_of_concert])) as set<address>,
       ledger: Big_map.empty as NFT.Ledger.t,
       metadata: Big_map.empty as NFT.Metadata.t,
       token_metadata: Big_map.empty as NFT.TokenMetadata.t,
       operators: Big_map.empty as NFT.Operators.t,
       token_ids: Set.empty as set<NFT.Storage.token_id>,
-      creator_of_concert: Tezos.get_sender() as address,
+      creator_of_concert: c.creator_of_concert,
       capacity: c.capacity,
       ticket_price: c.ticket_price,
       has_been_withdrawn: false,
