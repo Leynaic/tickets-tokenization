@@ -2,6 +2,8 @@
 
 Application de tokenization de billets de concert sur la blockchain Tezos.
 
+Démo : https://better-call.dev/ghostnet/KT1JXEthzfrNSS4jfjdYbyp9WM5mYbBcZbVC/
+
 # Exigences
 
 - Taqueria `v28.0 minimum` (https://taqueria.io/)
@@ -36,6 +38,7 @@ taq deploy concert.tz -e "testing"
 Ce contrat permet de déployer les contrats permettant de gérer les NFTs pour un concert. Ce contrat possède deux entrypoints.
 
 ### `createConcert`
+
 #### Paramètres
 
 - `capacity` `nat` : La capacité d'un concert soit le nombre maximum de NFT autorisé.
