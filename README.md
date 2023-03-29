@@ -13,9 +13,10 @@ Démo : https://better-call.dev/ghostnet/KT1JXEthzfrNSS4jfjdYbyp9WM5mYbBcZbVC/
 # Installation
 
 ```bash
-taq init
 npm install
+taq init
 taq install @taqueria/plugin-ligo
+esy install
 ```
 
 # Compilation des contrats
