@@ -14,7 +14,6 @@ Démo : https://better-call.dev/ghostnet/KT1JXEthzfrNSS4jfjdYbyp9WM5mYbBcZbVC/
 
 ```bash
 npm install
-taq init
 taq install @taqueria/plugin-ligo
 esy install
 ```
