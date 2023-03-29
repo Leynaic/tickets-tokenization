@@ -7,7 +7,7 @@ Démo : https://better-call.dev/ghostnet/KT1JXEthzfrNSS4jfjdYbyp9WM5mYbBcZbVC/
 # Exigences
 
 - Taqueria `v28.0 minimum` (https://taqueria.io/)
-- Node.js `v16.16 minimum` (https://nodejs.org/)
+- Node.js `v16.16 minimum` (à partir de la v17.0 - non supporté) (https://nodejs.org/)
 - Esy `v0.6 minimum` (https://esy.sh/)
 
 # Installation
